@@ -1,13 +1,22 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
+
 <link rel="import" href="../iron-autogrow-textarea/iron-autogrow-textarea.html">
 
 <!--
 `placetobe-textarea-box`
 Placetobe Textarea Box
 
+### Styling
+The following custom properties and mixins are available for styling:
+Custom property | Description | Default
+----------------|-------------|----------
+`--iron-autogrow-textarea-max-height` | Set max-height for textarea. Will enter scroll mode when height is reached.
+
 @demo demo/index.html 
+
 -->
 
 <dom-module id="placetobe-textarea-box">
@@ -58,36 +67,6 @@ Placetobe Textarea Box
         transform: translateY(6px);
       }
 
-      :host #input {
-        @apply --placetobe-flex-item--1;
-        @apply --placetobe-border-box;
-        @apply --placetobe-font-body;
-        @apply(--placetobe-border-box);
-        text-align: left;
-        margin: 1px;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        transition: 0.2s border-color, 0.3s padding-top;
-        outline: none;
-        color: var(--placetobe-color-darkblue);
-        background-color: transparent;
-      
-        --iron-autogrow-textarea: {
-          padding-left: var(--placetobe-margin);        
-        }
-
-      }
-
-
-      :host([empty]) #input {
-        padding-top: calc( var(--placetobe-margin) / 2);
-      }
-
-      :host([focussed]) #input {
-        color: var(--placetobe-color-darkblue);
-      }
-
       ::-webkit-input-placeholder {
         color: var(--placetobe-color-taupe);
         font-weight: 500;
@@ -104,14 +83,52 @@ Placetobe Textarea Box
         text-transform: capitalize;
       }
 
-      :host #input[type="number"]::-webkit-inner-spin-button {
-        display: none;
+      paper-input-container {
+        width: 100%;
+
+        --paper-input-container-underline: {
+          display: none;
+        }
+        --paper-input-container-underline-focus: {
+          display: none;          
+        }
+        --paper-input-container-underline-disabled: {
+          display: none;
+        }
       }
+
+      :host #input {
+        @apply --placetobe-flex-item--1;
+        @apply --placetobe-border-box;
+        @apply --placetobe-font-body;
+        @apply(--placetobe-border-box);
+        text-align: left;
+        width: 100%;
+        border: 0;
+        outline: none;
+        color: var(--placetobe-color-darkblue);
+        background-color: transparent;
+        @apply(--iron-autogrow-textarea-max-height);
+
+        --iron-autogrow-textarea: {
+          padding-left: var(--placetobe-margin);    
+          width: 90%;  
+        }
+      }
+
+      :host([focussed]) #input {
+        color: var(--placetobe-color-darkblue);
+      }
+
 
       :host button {
         @apply --placetobe-flex-item--none;
         @apply --placetobe-border-radius;
         @apply --placetobe-font-body;
+        position: absolute;
+        right: 9px;
+        top: 32px;
+        bottom: 63px;
         font-size: 11px;
         font-weight: 500;
         width: calc( var(--placetobe-margin) * 1.5 );
@@ -150,6 +167,8 @@ Placetobe Textarea Box
         font-size: 11px;
         position: absolute;
         right: 9px;
+        height: 8px;
+        top: 0px;
         bottom: 63px;
         color: white;
         font-weight: 500;
@@ -158,8 +177,8 @@ Placetobe Textarea Box
       :host h6:after {
         position: absolute;
         content: "";
-        top: 99%;
-        right: 9px;
+        top: 20px;
+        right: 12px;
         width: 0;
         height: 0;
         border-left: calc( var(--placetobe-margin) / 2 ) solid transparent;
@@ -172,41 +191,42 @@ Placetobe Textarea Box
     <div>
 
       <label for="input">[[name]]</label>
+      <paper-input-container no-label-float$="true">
 
-      <iron-autogrow-textarea id="input" class="paper-input-input"
-          bind-value="{{value}}"
-          invalid="{{invalid}}"
-          disabled$="[[disabled]]"
-          autocomplete$="[[autocomplete]]"
-          autofocus$="[[autofocus]]"
-          inputmode$="[[inputmode]]"
-          name$="[[name]]"
-          placeholder$="[[name]]"
-          readonly$="[[readonly]]"
-          required$="[[required]]"
-          minlength$="[[minLength]]"
-          maxlength$="[[maxLength]]"
-          autocapitalize$="[[autocapitalize]]"
-          rows$="[[rows]]"
-          form$="[[form]]"
-          on-focus="_handleFocus"
-          on-blur="_handleBlur" 
-          max-rows$="[[maxRows]]"
-          on-change="_onChange"></iron-autogrow-textarea>
+        <iron-autogrow-textarea id="input"
+            bind-value="{{value}}"
+            invalid="{{invalid}}"
+            disabled$="[[disabled]]"
+            autocomplete$="[[autocomplete]]"
+            autofocus$="[[autofocus]]"
+            inputmode$="[[inputmode]]"
+            name$="[[name]]"
+            placeholder$="[[name]]"
+            readonly$="[[readonly]]"
+            required$="[[required]]"
+            minlength$="[[minLength]]"
+            maxlength$="[[maxLength]]"
+            autocapitalize$="[[autocapitalize]]"
+            rows$="[[rows]]"
+            form$="[[form]]"
+            on-focus="_handleFocus"
+            on-blur="_handleBlur" 
+            max-rows$="[[maxRows]]"
+            on-change="_onChange"></iron-autogrow-textarea>
 
+      </paper-input-container>
 
-        <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
+      <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
 
-        <button
-          tabindex="2"
-          disabled$="[[!_hasFocussed]]"
-          hidden$="[[!tip]]"
-          on-mouseenter="_showTip"
-          on-focus="_showTip"
-          on-mouseleave="_hideTip"
-          on-blur="_hideTip"
-        >?</button>
-
+      <button
+        tabindex="2"
+        disabled$="[[!_hasFocussed]]"
+        hidden$="[[!tip]]"
+        on-mouseenter="_showTip"
+        on-focus="_showTip"
+        on-mouseleave="_hideTip"
+        on-blur="_hideTip"
+      >?</button>
     </div>
 
   </template>

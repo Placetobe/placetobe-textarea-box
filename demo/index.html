@@ -30,6 +30,11 @@
       placetobe-textarea-box {
         margin-bottom: 6px;
       }
+      #fixed-height{
+        --iron-autogrow-textarea-max-height: {
+          max-height: 100px;
+        };
+      }
     </style>
   </head>
   <body>
@@ -66,6 +71,12 @@
             name="postal code"
             required
             pattern="[0-9]{4}(\s|)[a-zA-Z]{2}"          
+          ></placetobe-textarea-box>
+          Fixed height
+          <placetobe-textarea-box
+            id="fixed-height"
+            type="text"
+            name="postal code"
           ></placetobe-textarea-box>
         </template>
       </demo-snippet>
