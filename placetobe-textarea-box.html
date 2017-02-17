@@ -9,7 +9,19 @@
 `placetobe-textarea-box`
 Placetobe Textarea Box
 
+Example:
+
+          <placetobe-textarea-box
+            type="text"
+            name="postal code"
+            required
+            pattern="[0-9]{4}(\s|)[a-zA-Z]{2}"
+            tip="e.g. 1234 AB"
+            max-rows="5"
+          ></placetobe-textarea-box>
+
 ### Styling
+
 The following custom properties and mixins are available for styling:
 Custom property | Description | Default
 ----------------|-------------|----------
@@ -191,7 +203,7 @@ Custom property | Description | Default
     <div>
 
       <label for="input">[[name]]</label>
-      <paper-input-container no-label-float$="{{!name}}">
+      <paper-input-container no-label-float$="{{!_displayFloatingLabel(name, value)}}">
 
         <iron-autogrow-textarea id="input"
             bind-value="{{value}}"
@@ -418,6 +430,11 @@ Custom property | Description | Default
 
       _computeShowTipButton: function (empty, tip, disabled, _hasFocussed) {
         return (!empty && !disabled && tip  && _hasFocussed)
+      },
+
+      _displayFloatingLabel: function (name, string) {
+        var stringEmpty = this._computeEmpty(string);
+        return (!stringEmpty && name)
       }
 
     });
