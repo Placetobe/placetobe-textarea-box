@@ -1,0 +1,404 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
+<link rel="import" href="../placetobe-styles/placetobe-styles.html">
+<link rel="import" href="../iron-autogrow-textarea/iron-autogrow-textarea.html">
+
+<!--
+`placetobe-textarea-box`
+Placetobe Textarea Box
+
+@demo demo/index.html 
+-->
+
+<dom-module id="placetobe-textarea-box">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      :host div {
+        @apply --placetobe-flex-layout--horizontal;
+        @apply --placetobe-cross-align--center;
+        @apply --placetobe-border-radius;
+        @apply(--placetobe-border-box);
+        min-height: calc( var(--placetobe-margin) * 3);
+        position: relative;
+        border: 1px solid var(--placetobe-color-taupe);
+        background-color: white;
+      }
+
+      :host([focussed]) div {
+        border-color: var(--placetobe-color-green);
+      }
+
+      :host label {
+        @apply --placetobe-font-body;
+        display: block;
+        position: absolute;
+        top: 6px;
+        margin: 1px;
+        left: calc(var(--placetobe-margin) / 2);
+        font-size: 11px;
+        font-weight: 500;
+        opacity: 1;
+        transform: translateY(0);
+        transition: 0.3s transform, 0.3s opacity, 0.3s color;
+        text-transform: capitalize;
+        pointer-events: none;
+        color: var(--placetobe-color-taupe);
+      }
+
+      :host([focussed]) label {
+        color: var(--placetobe-color-green);
+      }
+
+      :host([empty]) label {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      :host #input {
+        @apply --placetobe-flex-item--1;
+        @apply --placetobe-border-box;
+        @apply --placetobe-font-body;
+        @apply(--placetobe-border-box);
+        margin: 1px;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        transition: 0.2s border-color, 0.3s padding-top;
+        outline: none;
+        color: var(--placetobe-color-darkblue);
+        background-color: transparent;
+      
+        --iron-autogrow-textarea: {
+          padding-left: var(--placetobe-margin);        
+        }
+
+      }
+
+
+      :host([empty]) #input {
+        padding-top: calc( var(--placetobe-margin) / 2);
+      }
+
+      :host([focussed]) #input {
+        color: var(--placetobe-color-darkblue);
+      }
+
+      ::-webkit-input-placeholder {
+        color: var(--placetobe-color-taupe);
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+      ::-moz-placeholder {
+        color: var(--placetobe-color-taupe);
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+      :-ms-input-placeholder {
+        color: var(--placetobe-color-taupe);
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      :host #input[type="number"]::-webkit-inner-spin-button {
+        display: none;
+      }
+
+      :host button {
+        @apply --placetobe-flex-item--none;
+        @apply --placetobe-border-radius;
+        @apply --placetobe-font-body;
+        font-size: 11px;
+        font-weight: 500;
+        width: calc( var(--placetobe-margin) * 1.5 );
+        height: calc( var(--placetobe-margin) * 1.5 );
+        margin: 0 calc( var(--placetobe-margin) / 1.5 );
+        background-color: var(--placetobe-color-gray);
+        border: 0;
+        overflow: hidden;
+        transition: 0.3s all;
+        transform: scale(0,0);
+        transform-origin: 50% 50%;
+        outline: none;
+        cursor: pointer;
+      }
+
+      :host button:hover,
+      :host button:active {
+        background-color: var(--placetobe-color-green);
+        color: white;
+      }
+
+      :host button:focus {
+        background-color: var(--placetobe-color-green);
+        color: white;
+      }
+
+      :host([_show-tip-button]) button {
+        transform: scale(1,1);
+      }
+
+      :host h6 {
+        @apply --placetobe-font-body;
+        @apply --placetobe-border-radius;
+        padding: calc( var(--placetobe-margin) / 2);
+        background-color: var(--placetobe-color-green);
+        font-size: 11px;
+        position: absolute;
+        right: 9px;
+        bottom: 63px;
+        color: white;
+        font-weight: 500;
+      }
+
+      :host h6:after {
+        position: absolute;
+        content: "";
+        top: 99%;
+        right: 9px;
+        width: 0;
+        height: 0;
+        border-left: calc( var(--placetobe-margin) / 2 ) solid transparent;
+        border-right: calc( var(--placetobe-margin) / 2 ) solid transparent;
+        border-top: calc( var(--placetobe-margin) / 2 ) solid var(--placetobe-color-green);
+      }
+
+    </style>
+
+    <div>
+
+      <label for="input">[[name]]</label>
+
+      <iron-autogrow-textarea id="input" class="paper-input-input"
+          bind-value="{{value}}"
+          invalid="{{invalid}}"
+          disabled$="[[disabled]]"
+          autocomplete$="[[autocomplete]]"
+          autofocus$="[[autofocus]]"
+          inputmode$="[[inputmode]]"
+          name$="[[name]]"
+          placeholder$="[[name]]"
+          readonly$="[[readonly]]"
+          required$="[[required]]"
+          minlength$="[[minLength]]"
+          maxlength$="[[maxLength]]"
+          autocapitalize$="[[autocapitalize]]"
+          rows$="[[rows]]"
+          form$="[[form]]"
+          on-focus="_handleFocus"
+          on-blur="_handleBlur" 
+          max-rows$="[[maxRows]]"
+          on-change="_onChange"></iron-autogrow-textarea>
+
+
+        <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
+
+        <button
+          tabindex="2"
+          disabled$="[[!_hasFocussed]]"
+          hidden$="[[!tip]]"
+          on-mouseenter="_showTip"
+          on-focus="_showTip"
+          on-mouseleave="_hideTip"
+          on-blur="_hideTip"
+        >?</button>
+
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'placetobe-textarea-box',
+
+      properties: {
+        /*
+        * Tip to be displayed on button hover. Indicate within a few words what a user should do in the textarea.
+        * Tip-Button hidden when no tip is given.
+        */
+        tip: {
+          type: String,
+          value: null
+        },
+
+        /**
+        * String entered by user
+        */        
+        value: {
+          type: String,
+          value: null,
+          notify: true
+        },
+
+        /*
+        * Whether input in the textarea is required. Useful for forms.
+        */
+        required: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+        * Specifies one or more forms the text area belongs to
+        * value: form_id
+        */
+        form: {
+          type: String,
+          value: null
+        },
+
+        /**
+        * Specifies that a text area should be disabled
+        * @default: false
+        */
+        disabled: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+        * The initial number of rows.
+        *
+        * @attribute rows
+        * @type number
+        * @default 1
+        */
+        rows: {
+          type: Number,
+          value: 1
+        },
+
+        /**
+        * The maximum number of rows this element can grow to until it
+        * scrolls. 0 means no maximum.
+        *
+        * @attribute maxRows
+        * @type number
+        * @default 0
+        */
+        maxRows: {
+        type: Number,
+        value: 0
+        },
+
+        /**
+        * The minimum number of characters this element has to receive in order to become valid.
+        * @attribute maxLength
+        * @type number
+        * @default 0
+        */
+        maxLength: {
+          type: Number,
+          value: null
+        },
+
+        /**
+        * The maximum number of characters this element can receive.        *
+        * @attribute maxLength
+        * @type number
+        * @default 0
+        */
+        maxLength: {
+          type: Number,
+          value: null
+        },
+
+	      /**
+        * Specifies a name for a text area
+        */
+        name: {
+          type: String,
+          value: null
+        },
+
+        /**
+        * The validator provided in `validator`
+        * will be used first, if it exists; otherwise, the `textarea`'s validity
+        * is used. See Polymer.IronValidatableBehavior
+        */
+        invalid: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+	      /**
+        * Whether length of value String is 0; When user hasn't given any input.
+        */
+        empty: {
+          type: Boolean,
+          computed: '_computeEmpty(value)',
+          notify: true,
+          reflectToAttribute: true          
+        },
+
+	      /**
+        * Whether textarea has been focussed by user.
+        */
+        focussed: {
+          type: Boolean,
+          value: false,
+          readOnly: true,
+          reflectToAttribute: true
+        },
+
+        _tipHidden: {
+          type: Boolean,
+          value: true
+        },
+
+        _hasFocussed: {
+          type: Boolean,
+          value: false
+        },
+
+        _showTipButton: {
+          type: Boolean,
+          value: false,
+          computed: '_computeShowTipButton(empty, tip, disabled, _hasFocussed)',
+          reflectToAttribute: true
+        },
+
+        _buttonTabIndex: {
+          type: Number,
+          computed: '_computeButtonTabIndex(focussed)'
+        }
+
+      },
+
+      _computeEmpty: function(value) {
+        return (!value || value.length < 1);
+      },
+
+      _computeButtonTabIndex: function(focussed) {
+        if(focussed) return 1;
+        return -1;
+      },
+
+      _handleFocus: function() {
+        this.set('_hasFocussed', true);
+      },
+
+      _handleBlur: function() {
+        this.set('_hasFocussed', false);
+      },
+
+      _showTip: function() {
+        this._tipHidden = false;
+      },
+
+      _hideTip: function() {
+        this._tipHidden = true;
+      },
+
+      _computeShowTipButton: function (empty, tip, disabled, _hasFocussed) {
+        return (!empty && !disabled && tip  && _hasFocussed)
+      }
+
+    });
+  </script>
+</dom-module>
