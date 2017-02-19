@@ -115,7 +115,8 @@ Custom property | Description | Default
         @apply --placetobe-font-body;
         @apply(--placetobe-border-box);
         text-align: left;
-        width: 100%;
+        word-break: break-word;
+        width: 100%;        
         border: 0;
         outline: none;
         color: var(--placetobe-color-darkblue);
@@ -132,15 +133,14 @@ Custom property | Description | Default
         color: var(--placetobe-color-darkblue);
       }
 
+      .help-section {
+        border: none;
+      }
 
       :host button {
         @apply --placetobe-flex-item--none;
         @apply --placetobe-border-radius;
         @apply --placetobe-font-body;
-        position: absolute;
-        right: 9px;
-        top: 32px;
-        bottom: 63px;
         font-size: 11px;
         font-weight: 500;
         width: calc( var(--placetobe-margin) * 1.5 );
@@ -170,7 +170,7 @@ Custom property | Description | Default
       :host([_show-tip-button]) button {
         transform: scale(1,1);
       }
-
+ 
       :host h6 {
         @apply --placetobe-font-body;
         @apply --placetobe-border-radius;
@@ -179,9 +179,7 @@ Custom property | Description | Default
         font-size: 11px;
         position: absolute;
         right: 9px;
-        height: 8px;
-        top: 0px;
-        bottom: 63px;
+        bottom: 50px;
         color: white;
         font-weight: 500;
       }
@@ -189,8 +187,8 @@ Custom property | Description | Default
       :host h6:after {
         position: absolute;
         content: "";
-        top: 20px;
-        right: 12px;
+        top: 99%;
+        right: 9px;
         width: 0;
         height: 0;
         border-left: calc( var(--placetobe-margin) / 2 ) solid transparent;
@@ -205,7 +203,7 @@ Custom property | Description | Default
       <label for="input">[[name]]</label>
       <paper-input-container no-label-float$="{{!_displayFloatingLabel(name, value)}}">
 
-        <iron-autogrow-textarea id="input"
+        <iron-autogrow-textarea id="input" class="paper-input-input"
             bind-value="{{value}}"
             invalid="{{invalid}}"
             disabled$="[[disabled]]"
@@ -221,24 +219,25 @@ Custom property | Description | Default
             autocapitalize$="[[autocapitalize]]"
             rows$="[[rows]]"
             form$="[[form]]"
-            on-focus="_handleFocus"
-            on-blur="_handleBlur" 
+            on-focus="_handleTextareaFocus"
+            on-blur="_handleTextareaBlur" 
             max-rows$="[[maxRows]]"
-            on-change="_onChange"></iron-autogrow-textarea>
+            ></iron-autogrow-textarea>
 
       </paper-input-container>
 
-      <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
+      <div class="help-section">
+        <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
 
-      <button
-        tabindex="2"
-        disabled$="[[!_hasFocussed]]"
-        hidden$="[[!tip]]"
-        on-mouseenter="_showTip"
-        on-focus="_showTip"
-        on-mouseleave="_hideTip"
-        on-blur="_hideTip"
-      >?</button>
+        <button
+          tabindex="2"
+          hidden$="[[!tip]]"
+          on-mouseenter="_showTip"
+          on-focus="_handleButtonFocus"
+          on-mouseleave="_handleButtonBlur"
+          on-blur="_hideTip"
+        >?</button>
+      </div>
     </div>
 
   </template>
@@ -263,7 +262,6 @@ Custom property | Description | Default
         */        
         value: {
           type: String,
-          value: null,
           notify: true
         },
 
@@ -384,7 +382,12 @@ Custom property | Description | Default
           value: true
         },
 
-        _hasFocussed: {
+        _textareaHasFocus: {
+          type: Boolean,
+          value: false
+        },
+
+        _buttonHasFocus: {
           type: Boolean,
           value: false
         },
@@ -392,7 +395,7 @@ Custom property | Description | Default
         _showTipButton: {
           type: Boolean,
           value: false,
-          computed: '_computeShowTipButton(empty, tip, disabled, _hasFocussed)',
+          computed: '_computeShowTipButton(empty, tip, disabled, _textareaHasFocus, _buttonHasFocus)',
           reflectToAttribute: true
         },
 
@@ -412,12 +415,23 @@ Custom property | Description | Default
         return -1;
       },
 
-      _handleFocus: function() {
-        this.set('_hasFocussed', true);
+      _handleTextareaFocus: function() {
+        this.set('_textareaHasFocus', true);
       },
 
-      _handleBlur: function() {
-        this.set('_hasFocussed', false);
+      _handleTextareaBlur: function() {
+        this.set('_textareaHasFocus', false);
+      },
+
+      _handleButtonFocus: function() {
+        this.set('_buttonHasFocus', true)
+        this._showTip()
+      },
+
+      _handleButtonBlur: function() {
+        this.set('_buttonHasFocus', false)
+        this._hideTip()
+        this._handleTextareaFocus()
       },
 
       _showTip: function() {
@@ -428,8 +442,8 @@ Custom property | Description | Default
         this._tipHidden = true;
       },
 
-      _computeShowTipButton: function (empty, tip, disabled, _hasFocussed) {
-        return (!empty && !disabled && tip  && _hasFocussed)
+      _computeShowTipButton: function (empty, tip, disabled, _textareaHasFocus, _buttonHasFocus) {
+        return (!empty && !disabled && tip  && _textareaHasFocus || _buttonHasFocus)
       },
 
       _displayFloatingLabel: function (name, string) {
