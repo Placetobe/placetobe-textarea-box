@@ -113,7 +113,7 @@ Custom property | Description | Default
         @apply --placetobe-flex-item--1;
         @apply --placetobe-border-box;
         @apply --placetobe-font-body;
-        @apply(--placetobe-border-box);
+        @apply --placetobe-border-box;
         text-align: left;
         word-break: break-word;
         width: 100%;        
@@ -121,7 +121,8 @@ Custom property | Description | Default
         outline: none;
         color: var(--placetobe-color-darkblue);
         background-color: transparent;
-        @apply(--iron-autogrow-textarea-max-height);
+        @apply --iron-autogrow-textarea-max-height;
+        @apply --iron-autogrow-textarea-height;
 
         --iron-autogrow-textarea: {
           padding-left: var(--placetobe-margin) !important;    
