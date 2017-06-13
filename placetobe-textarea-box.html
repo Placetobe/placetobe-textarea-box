@@ -2,7 +2,6 @@
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../paper-input/paper-input-container.html">
-
 <link rel="import" href="../iron-autogrow-textarea/iron-autogrow-textarea.html">
 
 <!--
@@ -125,8 +124,13 @@ Custom property | Description | Default
         @apply --iron-autogrow-textarea-height;
 
         --iron-autogrow-textarea: {
-          padding-left: var(--placetobe-margin) !important;    
-          width: 90% !important;  
+          padding-left: calc( var(--placetobe-margin) / 2) !important;    
+          padding-right: calc( var(--placetobe-margin) / 2) !important;    
+          width: 100% !important;
+          box-sizing: border-box;
+        }
+        --iron-autogrow-textarea-placeholder: {
+          color: var(--placetobe-color-taupe);
         }
       }
 
@@ -136,6 +140,9 @@ Custom property | Description | Default
 
       .help-section {
         border: none;
+        position: absolute;
+        top: 0;
+        right: 0;
       }
 
       :host button {
@@ -144,9 +151,11 @@ Custom property | Description | Default
         @apply --placetobe-font-body;
         font-size: 11px;
         font-weight: 500;
+        position: absolute;
+        right: calc(var(--placetobe-margin) * 0.75);
+        top: calc(var(--placetobe-margin) * 0.75);
         width: calc( var(--placetobe-margin) * 1.5 );
         height: calc( var(--placetobe-margin) * 1.5 );
-        margin: 0 calc( var(--placetobe-margin) / 1.5 );
         background-color: var(--placetobe-color-gray);
         border: 0;
         overflow: hidden;
@@ -180,6 +189,7 @@ Custom property | Description | Default
         font-size: 11px;
         position: absolute;
         right: 9px;
+        min-width: calc( var(--placetobe-margin) * 4);
         bottom: 50px;
         color: white;
         font-weight: 500;
