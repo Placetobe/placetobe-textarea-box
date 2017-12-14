@@ -5,9 +5,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.7.0",
     "placetobe-styles": "Placetobe/placetobe-styles",
-    "placetobe-behaviors": "Placetobe/placetobe-behaviors",
-    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.0",
-    "paper-input": "^1.1.23"
+    "placetobe-behaviors": "Placetobe/placetobe-behaviors"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
