@@ -186,7 +186,7 @@ Placetobe Input Box
         on-blur="_handleBlur"
         required$="[[required]]"
         disabled="[[disabled]]"
-      >{{value::input}}</textarea>
+      >{{value}}</textarea>
 
         <h6 hidden$="[[_tipHidden]]">[[tip]]</h6>
 
@@ -327,6 +327,7 @@ Placetobe Input Box
 
       _handleInput: function(evt) {
         evt.target.style.height = evt.target.scrollHeight + 'px';
+        this.value = evt.target.value;
       },
 
       _handleFocus: function() {
